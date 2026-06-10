@@ -16,35 +16,35 @@ const getAvailableQuest = (): QuestId | null => {
 
   // ── Non-João captains: brief one-shot harbor/pub/palace/market/guild intro ──
 
-  if (captainId === '2' && portId === '9') {
+  if (captainId === '5' && portId === '9') {
     if (buildingId === '4' && !finishedQuest('pietroHarborIntro')) {
       return 'pietroHarborIntro';
     }
     return null;
   }
 
-  if (captainId === '3' && portId === '2') {
+  if (captainId === '2' && portId === '2') {
     if (buildingId === '2' && !finishedQuest('catalinaIntro')) {
       return 'catalinaIntro';
     }
     return null;
   }
 
-  if (captainId === '4' && portId === '30') {
+  if (captainId === '3' && portId === '30') {
     if (buildingId === '6' && !finishedQuest('ottoPalaceIntro')) {
       return 'ottoPalaceIntro';
     }
     return null;
   }
 
-  if (captainId === '5' && portId === '3') {
+  if (captainId === '6' && portId === '3') {
     if (buildingId === '1' && !finishedQuest('aliMarketIntro')) {
       return 'aliMarketIntro';
     }
     return null;
   }
 
-  if (captainId === '6' && portId === '36') {
+  if (captainId === '4' && portId === '36') {
     if (buildingId === '7' && !finishedQuest('ernstGuildIntro')) {
       return 'ernstGuildIntro';
     }

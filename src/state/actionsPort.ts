@@ -18,6 +18,10 @@ export const updateGeneral = () => {
     timePassed: state.timePassed,
     gold: state.gold,
   });
+
+  // Autosave on every interface-visible change, so a refresh never rolls
+  // back further than the player's last action
+  saveGame();
 };
 
 export const enterBuilding = (buildingId: string) => {

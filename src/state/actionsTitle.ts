@@ -11,11 +11,11 @@ const USED_SHIP_DURABILITY = 0.85;
 
 // Starting ship configuration for each captain except João (who receives his via quest).
 const captainStartingShip: Record<string, { shipId: string; name: string; crew: number }> = {
-  '2': { shipId: '8', name: 'Fortuna',    crew: 30 }, // Pietro  — Brigantine
-  '3': { shipId: '7', name: 'Venganza',   crew: 20 }, // Catalina — Caravela Redonda
-  '4': { shipId: '7', name: 'Discovery',  crew: 20 }, // Otto     — Caravela Redonda
-  '5': { shipId: '3', name: 'Suleiman',   crew: 15 }, // Ali      — Dhow
-  '6': { shipId: '8', name: 'Vrouw Maria', crew: 30 }, // Ernst    — Brigantine
+  '2': { shipId: '7', name: 'Venganza',   crew: 20 }, // Catalina — Caravela Redonda
+  '3': { shipId: '7', name: 'Discovery',  crew: 20 }, // Otto     — Caravela Redonda
+  '4': { shipId: '8', name: 'Vrouw Maria', crew: 30 }, // Ernst    — Brigantine
+  '5': { shipId: '8', name: 'Fortuna',    crew: 30 }, // Pietro   — Brigantine
+  '6': { shipId: '3', name: 'Suleiman',   crew: 15 }, // Ali      — Dhow
 };
 
 export const startNewGame = (captainId: string) => {
@@ -50,6 +50,8 @@ export const startNewGame = (captainId: string) => {
   }));
   state.portSupply = {} as PortSupply;
   state.fame = 0;
+  state.discoveries = [];
+  state.discoveredIds = [];
   state.combat = null;
   state.gameStarted = true;
 
@@ -76,6 +78,7 @@ export const startNewGame = (captainId: string) => {
   // Persist and update React
   saveGame();
   updateInterface.combat(null);
+  updateInterface.discovery(null);
   updateInterface.titleScreen(false);
   updateGeneral();
 };

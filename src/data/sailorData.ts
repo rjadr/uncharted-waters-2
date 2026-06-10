@@ -26,7 +26,7 @@ export type Sailor = {
 };
 
 const sailorData: { [key: string]: Sailor } = {
-  '2': {
+  '5': {
     name: 'Pietro Conti',
     age: 22,
     stats: {
@@ -43,7 +43,7 @@ const sailorData: { [key: string]: Sailor } = {
     battleLevel: 1,
     skills: ['Accounting', 'Negotiation'],
   },
-  '3': {
+  '2': {
     name: 'Catalina Erantzo',
     age: 21,
     stats: {
@@ -60,7 +60,7 @@ const sailorData: { [key: string]: Sailor } = {
     battleLevel: 10,
     skills: ['Gunnery'],
   },
-  '4': {
+  '3': {
     name: 'Otto Baynes',
     age: 30,
     stats: {
@@ -77,7 +77,7 @@ const sailorData: { [key: string]: Sailor } = {
     battleLevel: 3,
     skills: ['Celestial Navigation', 'Cartography'],
   },
-  '5': {
+  '6': {
     name: 'Ali Vezas',
     age: 25,
     stats: {
@@ -94,7 +94,7 @@ const sailorData: { [key: string]: Sailor } = {
     battleLevel: 8,
     skills: ['Negotiation'],
   },
-  '6': {
+  '4': {
     name: 'Ernst Von Bohr',
     age: 28,
     stats: {

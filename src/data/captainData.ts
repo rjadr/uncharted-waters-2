@@ -38,19 +38,6 @@ export const captainData: Record<string, CaptainConfig> = {
   },
   '2': {
     sailorId: '2',
-    firstName: 'Pietro',
-    lastName: 'Conti',
-    nationality: 'Italian',
-    startingPortId: '9', // Genoa
-    startingGold: 1000,
-    goal: 'Become the wealthiest merchant in the world',
-    description:
-      'An Italian merchant with a sharp head for numbers. ' +
-      'Dreams of building a trading empire spanning every sea.',
-    stats: { navigation: 84, combat: 80, intuition: 75, endurance: 110, rhetoric: 53, art: 61, sword: 81 },
-  },
-  '3': {
-    sailorId: '3',
     firstName: 'Catalina',
     lastName: 'Erantzo',
     nationality: 'Spanish',
@@ -62,8 +49,8 @@ export const captainData: Record<string, CaptainConfig> = {
       'admiral — she sails under the Spanish crown, hunting enemies on the high seas.',
     stats: { navigation: 80, combat: 190, intuition: 170, endurance: 65, rhetoric: 86, art: 92, sword: 95 },
   },
-  '4': {
-    sailorId: '4',
+  '3': {
+    sailorId: '3',
     firstName: 'Otto',
     lastName: 'Baynes',
     nationality: 'English',
@@ -75,21 +62,8 @@ export const captainData: Record<string, CaptainConfig> = {
       'Equipped with the finest instruments, he seeks to fill in every blank on the map.',
     stats: { navigation: 92, combat: 72, intuition: 140, endurance: 61, rhetoric: 88, art: 86, sword: 82 },
   },
-  '5': {
-    sailorId: '5',
-    firstName: 'Ali',
-    lastName: 'Vezas',
-    nationality: 'Ottoman',
-    startingPortId: '3', // Istanbul
-    startingGold: 1000,
-    goal: 'Recover the lost treasures of your homeland',
-    description:
-      'An Ottoman trader with connections throughout the Mediterranean and Indian Ocean. ' +
-      'He seeks ancient relics scattered by the crusades.',
-    stats: { navigation: 80, combat: 86, intuition: 84, endurance: 120, rhetoric: 53, art: 42, sword: 80 },
-  },
-  '6': {
-    sailorId: '6',
+  '4': {
+    sailorId: '4',
     firstName: 'Ernst',
     lastName: 'Von Bohr',
     nationality: 'Dutch',
@@ -101,14 +75,40 @@ export const captainData: Record<string, CaptainConfig> = {
       'He builds alliances and trade routes where others see only risks.',
     stats: { navigation: 78, combat: 92, intuition: 86, endurance: 120, rhetoric: 62, art: 53, sword: 90 },
   },
+  '5': {
+    sailorId: '5',
+    firstName: 'Pietro',
+    lastName: 'Conti',
+    nationality: 'Italian',
+    startingPortId: '9', // Genoa
+    startingGold: 1000,
+    goal: 'Become the wealthiest merchant in the world',
+    description:
+      'An Italian merchant with a sharp head for numbers. ' +
+      'Dreams of building a trading empire spanning every sea.',
+    stats: { navigation: 84, combat: 80, intuition: 75, endurance: 110, rhetoric: 53, art: 61, sword: 81 },
+  },
+  '6': {
+    sailorId: '6',
+    firstName: 'Ali',
+    lastName: 'Vezas',
+    nationality: 'Ottoman',
+    startingPortId: '3', // Istanbul
+    startingGold: 1000,
+    goal: 'Recover the lost treasures of your homeland',
+    description:
+      'An Ottoman trader with connections throughout the Mediterranean and Indian Ocean. ' +
+      'He seeks ancient relics scattered by the crusades.',
+    stats: { navigation: 80, combat: 86, intuition: 84, endurance: 120, rhetoric: 53, art: 42, sword: 80 },
+  },
 };
 
 // Mate IDs assigned to each captain at game start (first mate + bookkeeper if available)
 export const captainInitialMates: Record<string, string[]> = {
   '1': ['1'],          // João: just himself initially (Rocco+Enrico via quests)
-  '2': ['2'],          // Pietro: himself
-  '3': ['3'],          // Catalina: herself
-  '4': ['4'],          // Otto: himself
-  '5': ['5'],          // Ali: himself
-  '6': ['6'],          // Ernst: himself
+  '2': ['2'],          // Catalina: herself
+  '3': ['3'],          // Otto: himself
+  '4': ['4'],          // Ernst: himself
+  '5': ['5'],          // Pietro: himself
+  '6': ['6'],          // Ali: himself
 };

@@ -38,48 +38,48 @@ const characterData: { [key: string]: Character } = {
     name: 'Lucia the Waitress',
     color: 'text-pink-600',
   },
-  // Pietro Conti (captain 2)
-  '2': {
+  // Pietro Conti (captain 5)
+  '5': {
     name: 'Pietro',
     color: 'text-blue-600',
   },
-  '101': {
+  '17': {
     name: 'Uncle Maurizio',
     color: 'text-amber-800',
   },
-  // Catalina Erantzo (captain 3)
-  '3': {
+  // Catalina Erantzo (captain 2)
+  '2': {
     name: 'Catalina',
     color: 'text-red-500',
   },
-  '102': {
+  '38': {
     name: 'Don Ramiro',
     color: 'text-yellow-700',
   },
-  // Otto Baynes (captain 4)
-  '4': {
+  // Otto Baynes (captain 3)
+  '3': {
     name: 'Otto',
     color: 'text-blue-700',
   },
-  '103': {
+  '40': {
     name: 'Lord Hawkins',
     color: 'text-purple-700',
   },
-  // Ali Vezas (captain 5)
-  '5': {
+  // Ali Vezas (captain 6)
+  '6': {
     name: 'Ali',
     color: 'text-emerald-600',
   },
-  '104': {
+  '30': {
     name: 'Merchant Suleiman',
     color: 'text-orange-700',
   },
-  // Ernst Von Bohr (captain 6)
-  '6': {
+  // Ernst Von Bohr (captain 4)
+  '4': {
     name: 'Ernst',
     color: 'text-blue-500',
   },
-  '105': {
+  '46': {
     name: 'Councillor Van der Berg',
     color: 'text-gray-700',
   },
