@@ -14,6 +14,7 @@ import Fleet from './Fleet';
 import Popover from './common/Popover';
 import Items from './Items';
 import Mates from './Mates';
+import SaveLoad from './SaveLoad';
 
 interface Props {
   portId: string | null;
@@ -66,6 +67,9 @@ export default function Left({
           </Popover>
           <Popover label="Items">
             <Items />
+          </Popover>
+          <Popover label="Menu">
+            <SaveLoad />
           </Popover>
         </div>
       )}

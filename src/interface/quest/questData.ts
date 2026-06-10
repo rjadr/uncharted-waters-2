@@ -3,6 +3,7 @@ import {
   exitBuildingIfNotLodge,
   receiveGold,
   receiveFirstShip,
+  receiveShip,
   assignFirstRoles,
   recruitRocco,
   recruitEnrico,
@@ -1075,6 +1076,226 @@ const questData = asInferredKeysWithValue<Message[]>()({
       body: 'Hello $firstName, would you like some rum?',
       characterId: '98',
       position: 2,
+    },
+  ],
+
+  // ─── Pietro Conti (captain 2, Genoa port '9') ────────────────────────────
+
+  pietroHarborIntro: [
+    {
+      body: 'Pietro! Over here, nephew.',
+      characterId: '101',
+      position: 1,
+    },
+    {
+      body: 'Uncle Maurizio. I wasn\u2019t expecting to see you at the docks.',
+      characterId: '2',
+      position: 2,
+    },
+    {
+      body: 'Your father asked me to look after you. He was too ashamed to come himself \u2014 a Conti bankrupt is bad enough without the neighbors seeing it.',
+      characterId: '101',
+      position: 1,
+    },
+    {
+      body: 'I know. That\u2019s why I\u2019m leaving. I\u2019ll earn back everything we lost.',
+      characterId: '2',
+      position: 2,
+    },
+    {
+      body: 'Bold words. Well, I scraped together enough to refit this old Buss. She\u2019s nothing to look at, but she\u2019ll float.',
+      characterId: '101',
+      position: 1,
+    },
+    {
+      body: 'Buy cheap, sell dear \u2014 the Conti way. The Mediterranean trade lanes will set us right again.',
+      characterId: '2',
+      position: 2,
+    },
+    {
+      body: 'Go carefully, Pietro. The sea doesn\u2019t care about family honor.',
+      characterId: '101',
+      position: 1,
+      action: () => {
+        receiveShip('4', 'La Fortuna');
+      },
+      completeQuest: true,
+      exitBuilding: true,
+    },
+  ],
+
+  // ─── Catalina Erantzo (captain 3, Seville port '2') ──────────────────────
+
+  catalinaIntro: [
+    {
+      body: 'You are Catalina Erantzo? I expected someone... taller.',
+      characterId: '102',
+      position: 1,
+    },
+    {
+      body: 'And I expected Don Ramiro to have better manners. You have something for me, or not?',
+      characterId: '3',
+      position: 2,
+    },
+    {
+      body: 'Ha! You\u2019ll do. The Crown grants you a letter of marque. Hunt Portuguese vessels and you won\u2019t hang for it.',
+      characterId: '102',
+      position: 1,
+    },
+    {
+      body: 'Martinez. A Portuguese admiral named Martinez killed my brother Juan. If your letter gets me close enough to find him, I\u2019ll take it.',
+      characterId: '3',
+      position: 2,
+    },
+    {
+      body: 'We care nothing for your vendetta. Hurt Portugal\u2019s trade and you serve Spain.',
+      characterId: '102',
+      position: 1,
+    },
+    {
+      body: 'Then we understand each other. Where\u2019s my ship?',
+      characterId: '3',
+      position: 2,
+    },
+    {
+      body: 'Berthed at the harbor \u2014 a Brigantine. Fast, well-armed. She\u2019s called La Venganza.',
+      characterId: '102',
+      position: 1,
+      action: () => {
+        receiveShip('8', 'La Venganza');
+      },
+      completeQuest: true,
+      exitBuilding: true,
+    },
+  ],
+
+  // ─── Otto Baynes (captain 4, London port '30') ────────────────────────────
+
+  ottoPalaceIntro: [
+    {
+      body: 'Master Baynes. His Majesty King Henry has reviewed your proposal.',
+      characterId: '103',
+      position: 1,
+    },
+    {
+      body: 'And?',
+      characterId: '4',
+      position: 2,
+    },
+    {
+      body: 'The King agrees — England cannot let Spain and Portugal divide the world between them. You are commissioned to chart the unknown coasts.',
+      characterId: '103',
+      position: 1,
+    },
+    {
+      body: 'I\u2019ll need a proper vessel. Not a royal barge \u2014 something fit for open ocean.',
+      characterId: '4',
+      position: 2,
+    },
+    {
+      body: 'A Caravel has been fitted for the voyage. The King names her The Endeavour.',
+      characterId: '103',
+      position: 1,
+    },
+    {
+      body: 'Every blank on Mercator\u2019s map will be filled before I return.',
+      characterId: '4',
+      position: 2,
+    },
+    {
+      body: 'See that it is. England\u2019s glory \u2014 and His Majesty\u2019s patience \u2014 depend on it.',
+      characterId: '103',
+      position: 1,
+      action: () => {
+        receiveShip('7', 'The Endeavour');
+      },
+      completeQuest: true,
+      exitBuilding: true,
+    },
+  ],
+
+  // ─── Ali Vezas (captain 5, Istanbul port '3') ─────────────────────────────
+
+  aliMarketIntro: [
+    {
+      body: 'Ali! You actually came. I wasn\u2019t sure a boy from the backstreets of Istanbul would dare show his face here.',
+      characterId: '104',
+      position: 1,
+    },
+    {
+      body: 'You said you had a deal. I\u2019m listening.',
+      characterId: '5',
+      position: 2,
+    },
+    {
+      body: 'I\u2019m getting too old for long voyages. I have a Dhow, a few contacts, and knowledge of the eastern trade routes. You have nothing.',
+      characterId: '104',
+      position: 1,
+    },
+    {
+      body: 'I have ambition. That\u2019s worth more than a tired old man\u2019s contacts.',
+      characterId: '5',
+      position: 2,
+    },
+    {
+      body: 'Ha! Perhaps it is. The ship is yours \u2014 her name is Morning Star. Don\u2019t disgrace her.',
+      characterId: '104',
+      position: 1,
+    },
+    {
+      body: 'Spice, silk, ivory — there are fortunes to be made between here and the East. I intend to make one.',
+      characterId: '5',
+      position: 2,
+      action: () => {
+        receiveShip('3', 'Morning Star');
+      },
+      completeQuest: true,
+      exitBuilding: true,
+    },
+  ],
+
+  // ─── Ernst Von Bohr (captain 6, Hamburg port '36') ───────────────────────
+
+  ernstGuildIntro: [
+    {
+      body: 'Herr Von Bohr. The council has considered your proposal at length.',
+      characterId: '105',
+      position: 1,
+    },
+    {
+      body: 'The eastern routes are profitable \u2014 the data is clear. Portugal and Spain can\u2019t hold their monopoly forever.',
+      characterId: '6',
+      position: 2,
+    },
+    {
+      body: 'The council agrees. We are prepared to fund one ship, one voyage. Establish the routes and the trade company follows.',
+      characterId: '105',
+      position: 1,
+    },
+    {
+      body: 'One ship is enough. I\u2019ll chart the routes, establish the contacts, and prove the numbers.',
+      characterId: '6',
+      position: 2,
+    },
+    {
+      body: 'Your Buss is provisioned and ready at the harbor. The council has named her De Hoop — The Hope.',
+      characterId: '105',
+      position: 1,
+    },
+    {
+      body: 'Methodical progress. No heroics, no gambling — just routes and profit.',
+      characterId: '6',
+      position: 2,
+    },
+    {
+      body: 'Good luck, Herr Von Bohr. The council will be watching.',
+      characterId: '105',
+      position: 1,
+      action: () => {
+        receiveShip('4', 'De Hoop');
+      },
+      completeQuest: true,
+      exitBuilding: true,
     },
   ],
 });

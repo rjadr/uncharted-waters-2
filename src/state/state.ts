@@ -4,6 +4,9 @@ import type { Port } from '../game/port/port';
 import type { World } from '../game/world/world';
 import type { QuestId } from '../interface/quest/questData';
 import { ItemId } from '../data/itemData';
+import type { GoodId } from '../data/marketData';
+import type { EnemyFleet } from '../data/enemyData';
+import type { DiscoveryId } from '../data/discoveryData';
 
 export type Stage = 'world' | 'port' | 'building';
 
@@ -31,6 +34,25 @@ type Mate = {
   role: Role;
 };
 
+// Supply level (0–100) per good per port. 100 = fully stocked, lower = scarcer = higher prices.
+export type PortSupply = { [portId: string]: { [goodId in GoodId]?: number } };
+
+export type CombatPhase =
+  | 'encounter'   // enemy spotted, offer fight/flee
+  | 'fighting'    // broadside exchange
+  | 'boarding'    // hand-to-hand after durability low
+  | 'victory'
+  | 'defeat'
+  | 'fled';
+
+export interface CombatState {
+  phase: CombatPhase;
+  enemy: EnemyFleet;
+  playerDurability: number;
+  round: number;
+  log: string[];
+}
+
 export interface State {
   portId: string | null;
   buildingId: string | null;
@@ -50,6 +72,15 @@ export interface State {
   debt: number;
   items: ItemId[];
   mates: Mate[];
+  portSupply: PortSupply;
+  fame: number;
+  // discovery items currently in cargo (found but not yet presented to a researcher)
+  discoveries: DiscoveryId[];
+  // discovery ids already presented — cannot be found again
+  discoveredIds: DiscoveryId[];
+  combat: CombatState | null;
+  captainId: string; // which of the 6 captains the player is using
+  gameStarted: boolean; // false until startNewGame() is called; gates title screen
 }
 
 export const SAVED_STATE_KEY = 'savedState';
@@ -76,6 +107,13 @@ const state = {
       role: null,
     },
   ] as Mate[],
+  portSupply: {} as PortSupply,
+  fame: 0,
+  discoveries: [] as DiscoveryId[],
+  discoveredIds: [] as DiscoveryId[],
+  combat: null,
+  captainId: '1',
+  gameStarted: false,
   ...savedState,
 } as State;
 

@@ -4,6 +4,8 @@ import {
   Message,
   VendorMessage,
 } from './questData';
+import { captainData } from '../../data/captainData';
+import state from '../../state/state';
 
 export type VendorMessageBoxType =
   | (Pick<VendorMessage, 'body'> & MessageBoxCommonType)
@@ -29,9 +31,10 @@ export type MessageBoxes = [
 
 const getMessageBoxes = (messages: Message[], step: number) => {
   const message = messages[step];
+  const captain = captainData[state.captainId];
   message.body = message.body
-    .replace('$firstName', 'João')
-    .replace('$lastName', 'Franco');
+    .replace(/\$firstName/g, captain?.firstName ?? 'João')
+    .replace(/\$lastName/g, captain?.lastName ?? 'Franco');
 
   return messagePositions.map((position) => {
     if (position === 0) {

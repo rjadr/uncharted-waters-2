@@ -68,6 +68,9 @@ const createWorldCharacters = (map: Map) => {
         player.move(heading, collision);
       }
 
+      // Keep state position in sync so discovery checks can read it each tick
+      state.fleets[1].position = player.position();
+
       npcs.forEach((npc) => {
         npc.update();
 

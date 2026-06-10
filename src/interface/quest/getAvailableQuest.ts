@@ -10,9 +10,50 @@ const between22and24 = (timePassed: number) => {
 };
 
 const getAvailableQuest = (): QuestId | null => {
-  const { portId, buildingId, timePassed } = state;
+  const { portId, buildingId, timePassed, captainId } = state;
 
-  if (portId !== '1' || !buildingId) {
+  if (!buildingId) return null;
+
+  // ── Non-João captains: brief one-shot harbor/pub/palace/market/guild intro ──
+
+  if (captainId === '2' && portId === '9') {
+    if (buildingId === '4' && !finishedQuest('pietroHarborIntro')) {
+      return 'pietroHarborIntro';
+    }
+    return null;
+  }
+
+  if (captainId === '3' && portId === '2') {
+    if (buildingId === '2' && !finishedQuest('catalinaIntro')) {
+      return 'catalinaIntro';
+    }
+    return null;
+  }
+
+  if (captainId === '4' && portId === '30') {
+    if (buildingId === '6' && !finishedQuest('ottoPalaceIntro')) {
+      return 'ottoPalaceIntro';
+    }
+    return null;
+  }
+
+  if (captainId === '5' && portId === '3') {
+    if (buildingId === '1' && !finishedQuest('aliMarketIntro')) {
+      return 'aliMarketIntro';
+    }
+    return null;
+  }
+
+  if (captainId === '6' && portId === '36') {
+    if (buildingId === '7' && !finishedQuest('ernstGuildIntro')) {
+      return 'ernstGuildIntro';
+    }
+    return null;
+  }
+
+  // ── João's full quest chain (original, Lisbon port '1') ──────────────────
+
+  if (portId !== '1') {
     return null;
   }
 

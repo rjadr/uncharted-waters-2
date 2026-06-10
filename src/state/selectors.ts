@@ -7,6 +7,8 @@ import { getPlayerFleet } from './selectorsFleet';
 import createMap from '../map';
 import { applyPositionDelta } from '../utils';
 import getSailor from '../data/sailorData';
+import { shipData } from '../data/shipData';
+import { shipyardsToShips } from '../data/portShipyardData';
 
 export const getTimeOfDay = () => state.timePassed % 1440;
 
@@ -163,3 +165,31 @@ export const getRoleDisplay = (role: Role) => {
 export const getFirstMateId = () => '32';
 
 export const isLisbon = () => state.portId === '1';
+
+export const getCargoCapacityLeft = (): number => {
+  const fleet = getPlayerFleet();
+  let total = 0;
+  let used = 0;
+  fleet.forEach((ship) => {
+    total += shipData[ship.id].capacity;
+    ship.cargo.forEach((item) => { used += item.quantity; });
+  });
+  return total - used;
+};
+
+export const getCurrentMarketId = (): string => {
+  if (!state.portId) return '1';
+  const port = getPortData(state.portId);
+  if (port.isSupplyPort) return '1';
+  return port.marketId;
+};
+
+export const getNewShipsAvailable = () => {
+  if (!state.portId) return [];
+  const port = getPortData(state.portId);
+  if (port.isSupplyPort) return [];
+  const { industryId, industry } = port;
+  return (shipyardsToShips[industryId] || []).filter(
+    (ship) => ship.industryRequirement <= industry,
+  );
+};

@@ -1,4 +1,5 @@
-import type { State, ProvisionsType } from './state';
+import type { State, ProvisionsType, CombatState } from './state';
+import type { DiscoveryId } from '../data/discoveryData';
 
 interface UpdateInterface {
   general: (
@@ -10,6 +11,10 @@ interface UpdateInterface {
   playerFleetDirection: (direction: number) => void;
   playerFleetSpeed: (speed: number) => void;
   fade: (onComplete: () => void) => void;
+  combat: (combat: CombatState | null) => void;
+  titleScreen: (show: boolean) => void;
+  // called when a discovery item is found at sea
+  discovery: (discoveryId: DiscoveryId | null) => void;
 }
 
 const updateInterface = {} as UpdateInterface;

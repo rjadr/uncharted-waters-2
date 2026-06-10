@@ -21,7 +21,13 @@ export const getPositionDelta = (p1: Position, p2: Position) => ({
 });
 
 // nanoid(6) would’ve been preferred, but there’s this: https://github.com/ai/nanoid/issues/363
-export const generateId = () => Math.round(window.performance.now()).toString();
+// performance.now() alone can collide when called twice within the same
+// millisecond, so a counter is appended to keep ids unique
+let idCounter = 0;
+export const generateId = () => {
+  idCounter += 1;
+  return `${Math.round(window.performance.now())}-${idCounter}`;
+};
 
 /*
  This allows us to infer an object’s keys, while defining the type of the values

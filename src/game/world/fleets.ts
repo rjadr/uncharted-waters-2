@@ -4,7 +4,7 @@ export const provisions = ['water', 'food', 'lumber', 'shot'] as const;
 export type Provisions = typeof provisions[number];
 
 interface Cargo {
-  type: Provisions; // will be both Provisions and Goods
+  type: Provisions | string; // Provisions strings or good IDs like 'good_1'
   quantity: number;
 }
 

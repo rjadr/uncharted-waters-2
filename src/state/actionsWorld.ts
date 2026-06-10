@@ -3,7 +3,9 @@ import { portAdjacentAt } from '../game/port/portUtils';
 import createPort from '../game/port/port';
 import Input from '../input';
 import updateInterface from './updateInterface';
-import { updateGeneral } from './actionsPort';
+import { updateGeneral, restorePortSupply, saveGame } from './actionsPort';
+import { checkForEncounter } from './actionsCombat';
+import { checkForDiscoveries } from './actionsDiscovery';
 import {
   getCurrent,
   getIsSummer,
@@ -38,9 +40,12 @@ export const dock = (position: Position) => {
   Input.reset();
 
   updateGeneral();
+  restorePortSupply(portId);
 
   state.dayAtSea = 0;
   updateInterface.dayAtSea(state.dayAtSea);
+
+  saveGame();
 
   return true;
 };
@@ -58,7 +63,7 @@ const updateProvisions = () => {
   playerFleet.ships.forEach((ship) => {
     ship.cargo.forEach((item) => {
       if (item.type in provisions) {
-        provisions[item.type] += item.quantity;
+        (provisions as Record<string, number>)[item.type] += item.quantity;
       }
     });
   });
@@ -87,7 +92,30 @@ export const updateWorldStatus = () => {
   });
 };
 
+// Consume 1 food + 1 water per 10 crew per day (every 1440 minutes = 72 ticks of 20min)
+const consumeProvisions = () => {
+  const ships = state.fleets['1'].ships;
+
+  ships.forEach((ship) => {
+    const crew = ship.crew;
+    if (!crew) return;
+    const consume = Math.ceil(crew / 10);
+
+    (['food', 'water'] as const).forEach((type) => {
+      const item = ship.cargo.find((c) => c.type === type);
+      if (item) {
+        item.quantity = Math.max(0, item.quantity - consume);
+        if (item.quantity === 0) {
+          ship.cargo = ship.cargo.filter((c) => c.type !== type);
+        }
+      }
+    });
+  });
+};
+
 export const worldTimeTick = () => {
+  if (state.combat !== null) return; // freeze world while in combat
+
   state.timePassed += 20;
 
   if (shouldUpdateWorldStatus()) {
@@ -96,10 +124,23 @@ export const worldTimeTick = () => {
 
   if (getTimeOfDay() === 0) {
     updateGeneral();
+    consumeProvisions();
+    updateProvisions();
 
     state.dayAtSea += 1;
     updateInterface.dayAtSea(state.dayAtSea);
   }
+
+  // Check for random encounter only while actively sailing
+  if (state.fleets['1'].ships.length > 0) {
+    checkForEncounter();
+  }
+
+  // Check for nearby discovery items
+  if (state.portId === null) {
+    checkForDiscoveries();
+  }
+
 };
 
 /*

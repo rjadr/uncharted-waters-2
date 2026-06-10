@@ -9,8 +9,14 @@ import Indicators from './world/Indicators';
 import Camera from './Camera';
 import updateInterface from '../state/updateInterface';
 import Building from './port/Building';
+import Combat from './combat/Combat';
+import Discovery from './world/Discovery';
+import CaptainSelect from './title/CaptainSelect';
 import { classNames } from './interfaceUtils';
 import useFade from './port/hooks/useFade';
+import type { CombatState } from '../state/state';
+import type { DiscoveryId } from '../data/discoveryData';
+import state from '../state/state';
 
 import './global.css';
 
@@ -31,6 +37,9 @@ function Interface({ resolve }: Props) {
   const [buildingId, setBuildingId] = useState<string | null>(null);
   const [timePassed, setTimePassed] = useState(0);
   const [gold, setGold] = useState(0);
+  const [combat, setCombat] = useState<CombatState | null>(null);
+  const [pendingDiscovery, setPendingDiscovery] = useState<DiscoveryId | null>(null);
+  const [showTitleScreen, setShowTitleScreen] = useState(!state.gameStarted);
 
   useEffect(() => {
     resolve();
@@ -42,6 +51,10 @@ function Interface({ resolve }: Props) {
     setTimePassed(general.timePassed);
     setGold(general.gold);
   };
+
+  updateInterface.combat = setCombat;
+  updateInterface.discovery = setPendingDiscovery;
+  updateInterface.titleScreen = setShowTitleScreen;
 
   const { fade, onAnimationEnd } = useFade();
 
@@ -70,6 +83,9 @@ function Interface({ resolve }: Props) {
           <div className={buildingId ? 'hidden' : ''}>
             <Camera />
           </div>
+          {combat !== null && <Combat combat={combat} />}
+          {pendingDiscovery !== null && <Discovery discoveryId={pendingDiscovery} />}
+          {showTitleScreen && <CaptainSelect />}
         </div>
         <Right>
           {inPort && <PortInfo portId={portId} />}

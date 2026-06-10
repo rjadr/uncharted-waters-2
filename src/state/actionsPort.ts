@@ -1,13 +1,15 @@
 import updateInterface from './updateInterface';
 import { sample } from '../utils';
-import state from './state';
+import state, { SAVED_STATE_KEY } from './state';
 import { getUsedShips, isDay } from './selectors';
 import { shipData } from '../data/shipData';
 import { Provisions, Ship } from '../game/world/fleets';
 import { minutesUntilNextMorning } from '../interface/interfaceUtils';
 import type { QuestId } from '../interface/quest/questData';
-import { getPlayerFleet, getPlayerFleetShip } from './selectorsFleet';
+import { getPlayerFleet, getPlayerFleetShip, getTotalFreeCapacity, getGoodQuantity } from './selectorsFleet';
 import { itemData, ItemId } from '../data/itemData';
+import { type GoodId, getBuyPrice, getSellPrice, supplyModifier } from '../data/marketData';
+import { getPortData } from '../game/port/portUtils';
 
 export const updateGeneral = () => {
   updateInterface.general({
@@ -191,6 +193,20 @@ export const receiveFirstShip = () => {
   updateGeneral();
 };
 
+export const receiveShip = (id: string, name: string) => {
+  const { durability } = shipData[id];
+
+  addShip({
+    id,
+    name,
+    crew: 0,
+    cargo: [],
+    durability: Math.floor(durability * USED_SHIP_DURABILITY),
+  });
+
+  updateGeneral();
+};
+
 export const recruitRocco = () => {
   state.mates.push({
     sailorId: '32',
@@ -319,4 +335,142 @@ export const recruitCrew = (amount: number) => {
   state.gold -= amount * CREW_COST;
 
   updateGeneral();
+};
+
+// ─── Market / Trade Goods ────────────────────────────────────────────────────
+
+const getPortSupply = (portId: string, goodId: GoodId): number => {
+  if (!state.portSupply[portId]) state.portSupply[portId] = {};
+  return state.portSupply[portId][goodId] ?? 100;
+};
+
+const setPortSupply = (portId: string, goodId: GoodId, value: number) => {
+  if (!state.portSupply[portId]) state.portSupply[portId] = {};
+  state.portSupply[portId][goodId] = Math.max(0, Math.min(100, value));
+};
+
+export const getMarketBuyPrice = (goodId: GoodId): number => {
+  if (!state.portId) return 0;
+  const port = getPortData(state.portId);
+  if (port.isSupplyPort) return 0;
+  const base = getBuyPrice(goodId, port.marketId);
+  if (base === 0) return 0;
+  const supply = getPortSupply(state.portId, goodId);
+  return Math.max(1, Math.round(base * supplyModifier(supply)));
+};
+
+export const getMarketSellPrice = (goodId: GoodId): number => {
+  if (!state.portId) return 0;
+  const port = getPortData(state.portId);
+  if (port.isSupplyPort) return 0;
+  const base = getSellPrice(goodId, port.marketId);
+  const supply = getPortSupply(state.portId, goodId);
+  return Math.max(1, Math.round(base * (2 - supplyModifier(supply))));
+};
+
+// Returns false if not enough gold or space
+export const buyGood = (goodId: GoodId, quantity: number): boolean => {
+  if (!state.portId) return false;
+  const price = getMarketBuyPrice(goodId);
+  if (price === 0) return false;
+
+  const totalCost = price * quantity;
+  if (state.gold < totalCost) return false;
+  if (getTotalFreeCapacity() < quantity) return false;
+
+  // Load onto the flagship; overflow to next ships
+  const ships = getPlayerFleet();
+  let remaining = quantity;
+  for (let i = 0; i < ships.length && remaining > 0; i += 1) {
+    const { capacity, minimumCrew } = shipData[ships[i].id];
+    const used = ships[i].cargo.reduce((s, c) => s + c.quantity, 0);
+    const space = capacity - minimumCrew - used;
+    const load = Math.min(remaining, space);
+    if (load <= 0) continue;
+
+    const key = `good_${goodId}`;
+    const existing = ships[i].cargo.find((c) => c.type === key);
+    if (existing) {
+      existing.quantity += load;
+    } else {
+      ships[i].cargo.push({ type: key, quantity: load });
+    }
+    remaining -= load;
+  }
+
+  state.gold -= totalCost;
+  // Buying reduces supply (each 10 units bought drops supply by 5)
+  const drop = Math.floor(quantity / 10) * 5;
+  setPortSupply(state.portId, goodId, getPortSupply(state.portId, goodId) - drop);
+
+  updateGeneral();
+  saveGame();
+  return true;
+};
+
+// Returns false if player doesn't hold that good
+export const sellGood = (goodId: GoodId, quantity: number): boolean => {
+  if (!state.portId) return false;
+  const held = getGoodQuantity(goodId);
+  if (held < quantity) return false;
+
+  const price = getMarketSellPrice(goodId);
+  const total = price * quantity;
+
+  // Remove from ships in reverse order
+  const ships = getPlayerFleet();
+  let remaining = quantity;
+  for (let i = ships.length - 1; i >= 0 && remaining > 0; i -= 1) {
+    const key = `good_${goodId}`;
+    const item = ships[i].cargo.find((c) => c.type === key);
+    if (!item) continue;
+    const take = Math.min(item.quantity, remaining);
+    item.quantity -= take;
+    remaining -= take;
+    if (item.quantity === 0) {
+      ships[i].cargo = ships[i].cargo.filter((c) => c.type !== key);
+    }
+  }
+
+  state.gold += total;
+  // Selling increases supply
+  const rise = Math.floor(quantity / 10) * 5;
+  setPortSupply(state.portId, goodId, getPortSupply(state.portId, goodId) + rise);
+
+  updateGeneral();
+  saveGame();
+  return true;
+};
+
+// Restore supply levels slightly each time player arrives at a port
+export const restorePortSupply = (portId: string) => {
+  if (!state.portSupply[portId]) return;
+  const goods = Object.keys(state.portSupply[portId]) as GoodId[];
+  goods.forEach((goodId) => {
+    setPortSupply(portId, goodId, getPortSupply(portId, goodId) + 10);
+  });
+};
+
+// ─── Save / Load ─────────────────────────────────────────────────────────────
+
+// Fields that are safe to serialise (exclude live canvas/game-loop objects)
+const PERSIST_KEYS: (keyof typeof state)[] = [
+  'portId', 'timePassed', 'fleets', 'dayAtSea', 'gold',
+  'quests', 'usedShipsAtPort', 'savings', 'debt', 'items',
+  'mates', 'portSupply', 'fame', 'gameStarted', 'captainId',
+  'discoveries', 'discoveredIds',
+];
+
+export const saveGame = () => {
+  const snapshot: Record<string, unknown> = {};
+  PERSIST_KEYS.forEach((k) => { snapshot[k] = state[k]; });
+  try {
+    window.localStorage.setItem(SAVED_STATE_KEY, JSON.stringify(snapshot));
+  } catch {
+    // storage full or unavailable — silently skip
+  }
+};
+
+export const clearSave = () => {
+  window.localStorage.removeItem(SAVED_STATE_KEY);
 };

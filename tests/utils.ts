@@ -2,7 +2,12 @@ import { SAVED_STATE_KEY, State } from '../src/state/state';
 import { Position } from '../src/interface/port/CharacterMessageBox';
 
 export const setState = (state: Partial<State>) =>
-  window.localStorage.setItem(SAVED_STATE_KEY, JSON.stringify(state));
+  window.localStorage.setItem(
+    SAVED_STATE_KEY,
+    // gameStarted skips the captain select title screen, which only
+    // appears for a fresh session without a saved game
+    JSON.stringify({ gameStarted: true, ...state }),
+  );
 
 export const vendorMessageIncludes = (text: string) =>
   cy.get('[data-test=vendorMessageBox]').should('include.text', text);

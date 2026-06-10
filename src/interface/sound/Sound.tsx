@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SpeakerXMarkIcon, SpeakerWaveIcon } from '@heroicons/react/24/solid';
 
 import { getRegionOrIfSupplyPort } from '../../game/port/portUtils';
+import { audioState } from './audioState';
 
 import mastInTheMist from './assets/mast-in-the-mist.ogg';
 import themeOfJoao from './assets/theme-of-joão.ogg';
@@ -86,7 +87,12 @@ export default function Sound({ portId, buildingId }: Props) {
   const audioRef = useRef(getAudioElement());
 
   const [hasPlayed, setHasPlayed] = useState(false);
-  const [soundOn, setSoundOn] = useState(true);
+  const [soundOn, setSoundOn] = useState(!audioState.muted);
+
+  // Register with audioState so SaveLoad's volume slider can control this element
+  useEffect(() => {
+    audioState.register(audioRef.current);
+  }, []);
 
   const triggerAutoplay = () => {
     audioRef.current.play();
@@ -121,6 +127,7 @@ export default function Sound({ portId, buildingId }: Props) {
 
   useEffect(() => {
     audioRef.current.muted = !soundOn;
+    audioState.setMuted(!soundOn);
   }, [soundOn]);
 
   return (
