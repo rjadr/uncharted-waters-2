@@ -12,6 +12,7 @@ import Building from './port/Building';
 import Combat from './combat/Combat';
 import Discovery from './world/Discovery';
 import CaptainSelect from './title/CaptainSelect';
+import Intro from './title/Intro';
 import { classNames } from './interfaceUtils';
 import useFade from './port/hooks/useFade';
 import type { CombatState } from '../state/state';
@@ -40,6 +41,7 @@ function Interface({ resolve }: Props) {
   const [combat, setCombat] = useState<CombatState | null>(null);
   const [pendingDiscovery, setPendingDiscovery] = useState<DiscoveryId | null>(null);
   const [showTitleScreen, setShowTitleScreen] = useState(!state.gameStarted);
+  const [showIntro, setShowIntro] = useState(!state.gameStarted);
 
   useEffect(() => {
     resolve();
@@ -85,7 +87,10 @@ function Interface({ resolve }: Props) {
           </div>
           {combat !== null && <Combat combat={combat} />}
           {pendingDiscovery !== null && <Discovery discoveryId={pendingDiscovery} />}
-          {showTitleScreen && <CaptainSelect />}
+          {showTitleScreen && showIntro && (
+            <Intro onDone={() => setShowIntro(false)} />
+          )}
+          {showTitleScreen && !showIntro && <CaptainSelect />}
         </div>
         <Right>
           {inPort && <PortInfo portId={portId} />}
